@@ -50,32 +50,107 @@ export default function IndexPage() {
       return v.toString(16);
     });
 
-  if (loading) return <p>Checking token status...</p>;
+  if (loading) return <p className="loading-text">Checking token status...</p>;
 
   return (
-    <div>
-      <h1>Welcome to Cinema Talkiez</h1>
-      <p><strong>User ID:</strong> {userId}</p>
+    <div className="glassmorphism-page">
+      <div className="container">
+        <h1>Welcome to Cinema Talkiez</h1>
+        <p><strong>User ID:</strong> {userId}</p>
 
-      {tokenVerified && validToken ? (
-        <button onClick={() => router.push("/index1")}>
-          Visit HomePage
-        </button>
-      ) : tokenVerified ? (
-        <div>
-          <p>Token verified, but additional verification required.</p>
-          <button onClick={() => router.push("/verification-success")}>
-            Check
+        {tokenVerified && validToken ? (
+          <button onClick={() => router.push("/index1")} className="visitButton">
+            Visit HomePage
           </button>
-        </div>
-      ) : (
-        <div>
-          <p>Token not verified. Please verify first.</p>
-          <button onClick={() => router.push("/index.html")}>
-            Go to Verify Page
-          </button>
-        </div>
-      )}
+        ) : tokenVerified ? (
+          <div>
+            <p>Token verified, but additional verification required.</p>
+            <button onClick={() => router.push("/verification-success")} className="verifyButton">
+              Check
+            </button>
+          </div>
+        ) : (
+          <div>
+            <p>Token not verified. Please verify first.</p>
+            <button onClick={() => router.push("/index.html")} className="verifyButton">
+              Go to Verify Page
+            </button>
+          </div>
+        )}
+
+        <style jsx>{`
+          .glassmorphism-page {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+          }
+
+          .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            max-width: 600px;
+            margin: 20px;
+          }
+
+          h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 20px;
+          }
+
+          p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 20px;
+          }
+
+          .loading-text {
+            font-size: 18px;
+            color: #333;
+          }
+
+          button {
+            padding: 12px 24px;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.3s;
+            margin: 10px;
+            width: 200px;
+          }
+
+          .verifyButton {
+            background-color: #ff5722;
+            color: white;
+          }
+
+          .verifyButton:hover {
+            background-color: #e64a19;
+          }
+
+          .visitButton {
+            background-color: #4caf50;
+            color: white;
+          }
+
+          .visitButton:hover {
+            background-color: #388e3c;
+          }
+        `}</style>
+      </div>
     </div>
   );
 }
