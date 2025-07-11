@@ -5,17 +5,82 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Verification Success</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 2rem; }
-    #submitBtn { padding: 10px 20px; font-size: 16px; margin-top: 1rem; cursor: pointer; }
-    #statusMsg { margin-top: 1rem; font-weight: bold; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      max-width: 600px;
+      margin: 20px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 18px;
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: 0.3s;
+      margin: 10px;
+      width: 200px;
+      background-color: #ff5722;
+      color: white;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: #e64a19;
+    }
+
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+
+    #statusMsg {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #555;
+    }
   </style>
 </head>
 <body>
-  <h1>✅ Verification Success</h1>
-  <p><strong>User ID:</strong> <span id="userIdDisplay"></span></p>
+  <div class="container">
+    <h1>✅ Verification Success</h1>
+    <p><strong>User ID:</strong> <span id="userIdDisplay"></span></p>
 
-  <button id="submitBtn">Submit to Backend</button>
-  <p id="statusMsg"></p>
+    <button id="submitBtn">Submit to Backend</button>
+    <p id="statusMsg"></p>
+  </div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
@@ -30,7 +95,7 @@
     } else {
       userIdDisplay.textContent = userId;
   
-      // 🧠 Check if already verified
+      // Check if already verified
       fetch(`/api/check/${userId}`)
         .then(res => res.json())
         .then(data => {
@@ -53,6 +118,9 @@
         if (res.ok) {
           statusMsg.textContent = '✅ User verified and saved!';
           submitBtn.disabled = true; // Prevent multiple submissions
+          // Update localStorage to reflect verification
+          localStorage.setItem("validToken", "true");
+          localStorage.setItem("validTokenExpiration", (Date.now() + 10 * 60 * 1000).toString());
         } else {
           statusMsg.textContent = `❌ Error: ${data.message}`;
         }
@@ -62,6 +130,5 @@
       }
     });
   </script>
-  
 </body>
 </html>
