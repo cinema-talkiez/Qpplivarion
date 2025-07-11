@@ -19,7 +19,7 @@
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const userId = params.get('userId');
+    const userId = params.get('userId') || params.get('userid');
     const userIdDisplay = document.getElementById('userIdDisplay');
     const statusMsg = document.getElementById('statusMsg');
     const submitBtn = document.getElementById('submitBtn');
