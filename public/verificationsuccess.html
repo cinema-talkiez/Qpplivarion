@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verification Success</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; }
+    #submitBtn { padding: 10px 20px; font-size: 16px; margin-top: 1rem; cursor: pointer; }
+    #statusMsg { margin-top: 1rem; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>✅ Verification Success</h1>
+  <p><strong>User ID:</strong> <span id="userIdDisplay"></span></p>
+
+  <button id="submitBtn">Submit to Backend</button>
+  <p id="statusMsg"></p>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get('userId');
+    const userIdDisplay = document.getElementById('userIdDisplay');
+    const statusMsg = document.getElementById('statusMsg');
+    const submitBtn = document.getElementById('submitBtn');
+  
+    if (!userId) {
+      userIdDisplay.textContent = 'Not found in URL!';
+      submitBtn.disabled = true;
+    } else {
+      userIdDisplay.textContent = userId;
+  
+      // 🧠 Check if already verified
+      fetch(`/api/check/${userId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.exists && data.tokenVerified) {
+            statusMsg.textContent = '✅ Already verified.';
+            submitBtn.disabled = true;
+          }
+        });
+    }
+  
+    submitBtn.addEventListener('click', async () => {
+      try {
+        const res = await fetch('/api/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId, tokenVerified: true })
+        });
+  
+        const data = await res.json();
+        if (res.ok) {
+          statusMsg.textContent = '✅ User verified and saved!';
+          submitBtn.disabled = true; // Prevent multiple submissions
+        } else {
+          statusMsg.textContent = `❌ Error: ${data.message}`;
+        }
+      } catch (err) {
+        console.error(err);
+        statusMsg.textContent = '❌ Server error occurred.';
+      }
+    });
+  </script>
+  
+</body>
+</html>
